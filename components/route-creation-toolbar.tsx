@@ -11,6 +11,7 @@ type RouteCreationToolbarProps = {
   onClear: () => void
   onUndo: () => void
   onRedo: () => void
+  onLocationSearch: (location: string) => void
   isCollapsed: boolean
   onCollapsedChange: (collapsed: boolean) => void
 }
@@ -19,6 +20,7 @@ export function RouteCreationToolbar({
   onClear,
   onUndo,
   onRedo,
+  onLocationSearch,
   isCollapsed,
   onCollapsedChange,
 }: RouteCreationToolbarProps) {
@@ -82,6 +84,11 @@ export function RouteCreationToolbar({
                 placeholder="ロケーションを入力"
                 value={locationInput}
                 onChange={(e) => setLocationInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && locationInput.trim()) {
+                    onLocationSearch(locationInput.trim());
+                  }
+                }}
                 className="h-8 text-sm"
               />
             </div>

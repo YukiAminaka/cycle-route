@@ -1,24 +1,30 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Upload, Plus, ChevronLeft, ChevronRight, MoreVertical } from "lucide-react"
-import { useState } from "react"
-import type { RoutePoint } from "@/components/map-interface"
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Upload,
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  MoreVertical,
+} from "lucide-react";
+import { useState } from "react";
+import type { RoutePoint } from "@/components/map";
 
 type RouteCreationSidebarProps = {
-  routePoints: RoutePoint[]
-  routeName: string
-  onRouteNameChange: (name: string) => void
-  onClear: () => void
-  onUndo: () => void
-  onRedo: () => void
-  onSave: () => void
-  onImport: () => void
-  isCollapsed: boolean
-  onCollapsedChange: (collapsed: boolean) => void
-}
+  routePoints: RoutePoint[];
+  routeName: string;
+  onRouteNameChange: (name: string) => void;
+  onClear: () => void;
+  onUndo: () => void;
+  onRedo: () => void;
+  onSave: () => void;
+  onImport: () => void;
+  isCollapsed: boolean;
+  onCollapsedChange: (collapsed: boolean) => void;
+};
 
 export function RouteCreationSidebar({
   routePoints,
@@ -32,27 +38,29 @@ export function RouteCreationSidebar({
   isCollapsed,
   onCollapsedChange,
 }: RouteCreationSidebarProps) {
-  const [locationInput, setLocationInput] = useState("")
-  const [routingMode, setRoutingMode] = useState<"bike" | "walk" | "car" | "direct">("bike")
-  const [roadSurface, setRoadSurface] = useState("paved")
-  const [routeColor, setRouteColor] = useState("#ef4444")
+  const [locationInput, setLocationInput] = useState("");
+  const [routingMode, setRoutingMode] = useState<
+    "bike" | "walk" | "car" | "direct"
+  >("bike");
+  const [roadSurface, setRoadSurface] = useState("paved");
+  const [routeColor, setRouteColor] = useState("#ef4444");
 
   const calculateDistance = () => {
-    if (routePoints.length < 2) return 0
-    let distance = 0
+    if (routePoints.length < 2) return 0;
+    let distance = 0;
     for (let i = 1; i < routePoints.length; i++) {
-      const prev = routePoints[i - 1]
-      const curr = routePoints[i]
-      const dx = (curr.lng - prev.lng) * 111
-      const dy = (curr.lat - prev.lat) * 111
-      distance += Math.sqrt(dx * dx + dy * dy)
+      const prev = routePoints[i - 1];
+      const curr = routePoints[i];
+      const dx = (curr.lng - prev.lng) * 111;
+      const dy = (curr.lat - prev.lat) * 111;
+      distance += Math.sqrt(dx * dx + dy * dy);
     }
-    return distance
-  }
+    return distance;
+  };
 
-  const distance = calculateDistance()
-  const elevationGain = Math.round(distance * 20)
-  const pavedDistance = distance * 1.0 // 100% paved for now
+  const distance = calculateDistance();
+  const elevationGain = Math.round(distance * 20);
+  const pavedDistance = distance * 1.0; // 100% paved for now
 
   const colors = [
     "#ef4444", // red
@@ -62,7 +70,7 @@ export function RouteCreationSidebar({
     "#ec4899", // pink
     "#7c2d12", // brown
     "#000000", // black
-  ]
+  ];
 
   if (isCollapsed) {
     return (
@@ -76,7 +84,7 @@ export function RouteCreationSidebar({
           <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
-    )
+    );
   }
 
   return (
@@ -86,14 +94,19 @@ export function RouteCreationSidebar({
         <div className="p-4 border-b">
           <h2 className="text-lg font-semibold">ルート</h2>
           <div className="flex gap-2 mt-3">
-            <Button variant="outline" size="sm" className="flex-1 bg-transparent" onClick={onImport}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1 bg-transparent"
+              onClick={onImport}
+            >
               <Upload className="h-4 w-4 mr-1" />
               インポート
             </Button>
-            <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+            {/* <Button variant="outline" size="sm" className="flex-1 bg-transparent">
               <Plus className="h-4 w-4 mr-1" />
               新規追加
-            </Button>
+            </Button> */}
           </div>
         </div>
 
@@ -130,12 +143,17 @@ export function RouteCreationSidebar({
                 </div>
                 <div className="flex gap-3">
                   <span>{pavedDistance.toFixed(1)} km</span>
-                  <span className="text-muted-foreground w-12 text-right">100%</span>
+                  <span className="text-muted-foreground w-12 text-right">
+                    100%
+                  </span>
                 </div>
               </div>
               <div className="flex items-center justify-between text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-muted-foreground" style={{ borderStyle: "dashed" }} />
+                  <div
+                    className="w-4 h-4 border-2 border-muted-foreground"
+                    style={{ borderStyle: "dashed" }}
+                  />
                   <span>舗装されていない</span>
                 </div>
                 <div className="flex gap-3">
@@ -170,19 +188,26 @@ export function RouteCreationSidebar({
               {routePoints.length > 1 && (
                 <>
                   <div className="pl-6 text-muted-foreground text-xs">
-                    {distance.toFixed(1)} km · +{elevationGain} m / -{Math.round(elevationGain * 0.5)} m
+                    {distance.toFixed(1)} km · +{elevationGain} m / -
+                    {Math.round(elevationGain * 0.5)} m
                   </div>
                   <div className="flex items-start gap-2">
                     <div className="w-4 h-4 bg-red-500 rounded-full mt-0.5 flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <div className="font-medium">ルート終点</div>
-                      <div className="text-muted-foreground text-xs">{distance.toFixed(1)} km</div>
+                      <div className="text-muted-foreground text-xs">
+                        {distance.toFixed(1)} km
+                      </div>
                     </div>
                   </div>
                 </>
               )}
             </div>
-            <Button variant="outline" size="sm" className="w-full bg-transparent">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full bg-transparent"
+            >
               キューのレビュー
             </Button>
           </div>
@@ -200,9 +225,13 @@ export function RouteCreationSidebar({
         </div>
       </Card>
 
-      <Button size="icon" onClick={() => onCollapsedChange(true)} className="h-10 w-6 rounded-l-none bg-white">
+      <Button
+        size="icon"
+        onClick={() => onCollapsedChange(true)}
+        className="h-10 w-6 rounded-l-none bg-white"
+      >
         <ChevronLeft className="h-4 w-4 text-black" />
       </Button>
     </div>
-  )
+  );
 }
