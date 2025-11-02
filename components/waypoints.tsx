@@ -4,6 +4,10 @@ import MapLibreGlDirections, {
 import maplibregl from "maplibre-gl";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Marker, useMap } from "react-map-gl/maplibre";
+import { RouteCreationSidebar } from "./route-creation-sidebar";
+import Map, { MapRef as MapLibreMapRef } from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { RouteCreationToolbar } from "./route-creation-toolbar";
 
 type Cue = {
   order: number;
@@ -49,6 +53,17 @@ const Waypoints = () => {
   const nativeMap = map?.getMap();
   const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_KEY;
   const directionsRef = useRef<MapLibreGlDirections | null>(null);
+
+  const [routeName, setRouteName] = useState("");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isToolbarCollapsed, setIsToolbarCollapsed] = useState(false);
+  const handleImport = () => {
+    console.log("Import not yet implemented");
+  };
+  const handleRouteSaved = () => {
+    console.log("Route saved:");
+  };
+  const mapRef = useRef<MapLibreMapRef>(null);
 
   const [q, setQ] = useState("東京駅");
   const dq = useDebounced(q, 160);
@@ -278,54 +293,38 @@ const Waypoints = () => {
   };
 
   return (
-    <div className="absolute z-10 top-3 left-3 w-[420px] bg-white/90 rounded-xl shadow p-3">
-      <div className="text-sm font-medium mb-2">
-        経由地を1つずつ追加（Search Box → addWaypoint）
-      </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault(); /* Enterでもサジェストを待つ */
+    <div className="relative h-full w-full flex">
+      <RouteCreationSidebar
+        routeName={routeName}
+        onSave={handleRouteSaved}
+        onImport={handleImport}
+        isCollapsed={isSidebarCollapsed}
+        onCollapsedChange={setIsSidebarCollapsed}
+      />
+      <Map
+        ref={mapRef}
+        id="map"
+        initialViewState={{
+          longitude: 139.753,
+          latitude: 35.6844,
+          zoom: 14,
         }}
-      >
-        <input
-          value={q}
-          onChange={(e) => {
-            setQ(e.target.value);
-            session.renew();
-          }}
-          className="border rounded px-3 py-2 w-full"
-          placeholder="地名・住所・POI を入力（例: 大手町）"
-          autoComplete="off"
-        />
-      </form>
-
-      {suggestions.length > 0 && (
-        <ul className="border rounded mt-2 bg-white max-h-72 overflow-auto">
-          {suggestions.map((s) => (
-            <li
-              key={s.mapbox_id}
-              className="px-3 py-2 cursor-pointer hover:bg-gray-100"
-              onClick={() => pick(s)}
-            >
-              <div className="text-sm">{s.name}</div>
-              <div className="text-xs text-gray-500">{s.context}</div>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {/* 追加済みの簡易表示と操作 */}
-      <div className="flex items-center gap-2 mt-3">
-        <button onClick={undoLast} className="px-2 py-1 rounded border">
-          ひとつ戻す
-        </button>
-        <button onClick={clearAll} className="px-2 py-1 rounded border">
-          クリア
-        </button>
-        <div className="text-xs text-gray-600 ml-auto">
-          追加済み: {waypoints.length} 点
-        </div>
-      </div>
+        style={{ width: "100%", height: "100%" }}
+        mapStyle={`https://api.maptiler.com/maps/streets-v2/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`}
+      />
+      <RouteCreationToolbar
+        onClear={clearAll}
+        onUndo={undoLast}
+        onRedo={() => {}}
+        session={session}
+        suggestions={suggestions}
+        q={q}
+        setQ={setQ}
+        pick={pick}
+        waypoints={waypoints}
+        isCollapsed={isToolbarCollapsed}
+        onCollapsedChange={setIsToolbarCollapsed}
+      />
     </div>
   );
 };

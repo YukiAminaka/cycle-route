@@ -11,15 +11,9 @@ import {
   MoreVertical,
 } from "lucide-react";
 import { useState } from "react";
-import type { RoutePoint } from "@/components/map";
 
 type RouteCreationSidebarProps = {
-  routePoints: RoutePoint[];
   routeName: string;
-  onRouteNameChange: (name: string) => void;
-  onClear: () => void;
-  onUndo: () => void;
-  onRedo: () => void;
   onSave: () => void;
   onImport: () => void;
   isCollapsed: boolean;
@@ -27,12 +21,7 @@ type RouteCreationSidebarProps = {
 };
 
 export function RouteCreationSidebar({
-  routePoints,
   routeName,
-  onRouteNameChange,
-  onClear,
-  onUndo,
-  onRedo,
   onSave,
   onImport,
   isCollapsed,
@@ -44,23 +33,6 @@ export function RouteCreationSidebar({
   >("bike");
   const [roadSurface, setRoadSurface] = useState("paved");
   const [routeColor, setRouteColor] = useState("#ef4444");
-
-  const calculateDistance = () => {
-    if (routePoints.length < 2) return 0;
-    let distance = 0;
-    for (let i = 1; i < routePoints.length; i++) {
-      const prev = routePoints[i - 1];
-      const curr = routePoints[i];
-      const dx = (curr.lng - prev.lng) * 111;
-      const dy = (curr.lat - prev.lat) * 111;
-      distance += Math.sqrt(dx * dx + dy * dy);
-    }
-    return distance;
-  };
-
-  const distance = calculateDistance();
-  const elevationGain = Math.round(distance * 20);
-  const pavedDistance = distance * 1.0; // 100% paved for now
 
   const colors = [
     "#ef4444", // red
@@ -88,8 +60,8 @@ export function RouteCreationSidebar({
   }
 
   return (
-    <div className="flex-shrink-0 w-80 p-4 flex gap-1">
-      <Card className="flex-1 flex flex-col shadow-lg">
+    <div className="flex-shrink-0 w-80 p-1 flex">
+      <div className="flex-1 flex flex-col">
         {/* Fixed Header */}
         <div className="p-4 border-b">
           <h2 className="text-lg font-semibold">ルート</h2>
@@ -117,7 +89,6 @@ export function RouteCreationSidebar({
               <Input
                 placeholder="名前のないルート"
                 value={routeName}
-                onChange={(e) => onRouteNameChange(e.target.value)}
                 className="text-sm h-9 flex-1"
               />
               <Button variant="ghost" size="icon" className="h-9 w-9 ml-2">
@@ -125,8 +96,8 @@ export function RouteCreationSidebar({
               </Button>
             </div>
             <div className="flex gap-4 text-sm text-muted-foreground">
-              <span>{distance.toFixed(1)} km</span>
-              <span>{elevationGain} m</span>
+              <span>2 km</span>
+              <span>5 m</span>
             </div>
           </div>
 
@@ -142,7 +113,7 @@ export function RouteCreationSidebar({
                   <span>舗装された</span>
                 </div>
                 <div className="flex gap-3">
-                  <span>{pavedDistance.toFixed(1)} km</span>
+                  <span>10 km</span>
                   <span className="text-muted-foreground w-12 text-right">
                     100%
                   </span>
@@ -185,23 +156,6 @@ export function RouteCreationSidebar({
                   <div className="text-muted-foreground text-xs">0.0 km</div>
                 </div>
               </div>
-              {routePoints.length > 1 && (
-                <>
-                  <div className="pl-6 text-muted-foreground text-xs">
-                    {distance.toFixed(1)} km · +{elevationGain} m / -
-                    {Math.round(elevationGain * 0.5)} m
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-4 h-4 bg-red-500 rounded-full mt-0.5 flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium">ルート終点</div>
-                      <div className="text-muted-foreground text-xs">
-                        {distance.toFixed(1)} km
-                      </div>
-                    </div>
-                  </div>
-                </>
-              )}
             </div>
             <Button
               variant="outline"
@@ -218,12 +172,11 @@ export function RouteCreationSidebar({
           <Button
             onClick={onSave}
             className="w-full bg-[#ff6b00] hover:bg-[#ff6b00]/90 text-white font-medium h-11"
-            disabled={routePoints.length < 2}
           >
             保存
           </Button>
         </div>
-      </Card>
+      </div>
 
       <Button
         size="icon"
