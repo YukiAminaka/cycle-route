@@ -30,11 +30,9 @@ export function RouteCreationSidebar({
   isCollapsed,
   onCollapsedChange,
 }: RouteCreationSidebarProps) {
-  const [cues, setCues] = useState<Cue[]>(cue || []);
-
   if (isCollapsed) {
     return (
-      <div className="flex-shrink-0 flex items-start">
+      <div className="shrink-0 flex items-start">
         <Button
           variant="outline"
           size="icon"
@@ -48,8 +46,8 @@ export function RouteCreationSidebar({
   }
 
   return (
-    <div className="flex-shrink-0 w-80 p-1 flex">
-      <div className="flex-1 flex flex-col">
+    <div className="shrink-0 w-80 p-1 flex">
+      <div className="flex-1 flex flex-col relative">
         {/* Fixed Header */}
         <div className="p-4 border-b">
           <h2 className="text-lg font-semibold">ルート</h2>
@@ -156,15 +154,15 @@ export function RouteCreationSidebar({
             保存
           </Button>
         </div>
-      </div>
 
-      <Button
-        size="icon"
-        onClick={() => onCollapsedChange(true)}
-        className="h-10 w-6 rounded-l-none bg-white"
-      >
-        <ChevronLeft className="h-4 w-4 text-black" />
-      </Button>
+        <Button
+          size="icon"
+          onClick={() => onCollapsedChange(true)}
+          className="absolute top-20 -right-7 h-10 w-6 rounded-l-none bg-white z-10"
+        >
+          <ChevronLeft className="h-4 w-4 text-black" />
+        </Button>
+      </div>
     </div>
   );
 }

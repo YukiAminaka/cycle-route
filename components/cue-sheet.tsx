@@ -173,7 +173,7 @@ export function CueSheet({
             {/* Start Point */}
             {cues[0] && (
               <div className="flex items-center gap-3 px-4 py-3 border-b">
-                <div className="flex h-8 w-8 items-center justify-center rounded bg-emerald-500 text-white shrink-0">
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-emerald-500 text-white">
                   <Play className="h-5 w-5 fill-current" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -224,7 +224,7 @@ export function CueSheet({
                           key={cue.order}
                           className="flex items-center gap-3 px-4 py-3 border-b hover:bg-muted/50 transition-colors"
                         >
-                          <div className="flex h-8 w-8 items-center justify-center rounded bg-muted text-foreground shrink-0">
+                          <div className="flex h-8 w-8 items-center justify-center rounded bg-muted text-foreground">
                             {Icon}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -258,7 +258,7 @@ export function CueSheet({
             {/* End Point */}
             {cues.length > 1 && cues[cues.length - 1] && (
               <div className="flex items-center gap-3 px-4 py-3">
-                <div className="flex h-8 w-8 items-center justify-center rounded bg-red-500 text-white shrink-0">
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-red-500 text-white">
                   <Square className="h-5 w-5 fill-current" />
                 </div>
                 <div className="flex-1 min-w-0">

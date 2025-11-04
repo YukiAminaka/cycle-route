@@ -81,7 +81,7 @@ export function RouteCreationToolbar({
 
   if (isCollapsed) {
     return (
-      <div className="flex-shrink-0 flex items-start">
+      <div className="shrink-0 flex items-start">
         <Button
           variant="outline"
           size="icon"
@@ -95,14 +95,7 @@ export function RouteCreationToolbar({
   }
 
   return (
-    <div className="flex-shrink-0 p-4 flex gap-1">
-      <Button
-        size="icon"
-        onClick={() => onCollapsedChange(true)}
-        className="h-10 w-6 rounded-r-none bg-white"
-      >
-        <ChevronRight className="h-4 w-4 text-black" />
-      </Button>
+    <div className="shrink-0 p-4 flex gap-1 relative">
       <div className="w-80 max-h-[calc(100vh-7rem)] overflow-y-auto">
         <div className="space-y-2  pr-1">
           {/* Top Controls */}
@@ -310,6 +303,13 @@ export function RouteCreationToolbar({
             </div>
           </div>
         </div>
+        <Button
+          size="icon"
+          onClick={() => onCollapsedChange(true)}
+          className="absolute top-20 -left-6 z-10 h-10 w-6 rounded-r-none bg-white"
+        >
+          <ChevronRight className="h-4 w-4 text-black" />
+        </Button>
       </div>
     </div>
   );
