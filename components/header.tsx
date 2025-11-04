@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Bike,
   Menu,
@@ -13,36 +13,36 @@ import {
   MessageSquare,
   FileText,
   Globe,
-} from "lucide-react"
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface HeaderProps {
-  currentView?: "dashboard" | "activity" | "routes"
+  currentView?: "dashboard" | "activity" | "routes";
 }
 
 export function Header({ currentView }: HeaderProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   const viewLabels = {
     dashboard: "ダッシュボード",
     activity: "アクティビティ",
     routes: "マイルート",
-  }
+  };
 
   const handleSignOut = () => {
     // TODO: Implement actual sign out logic
-    console.log("[v0] Sign out clicked")
-    router.push("/")
-  }
+    console.log("[v0] Sign out clicked");
+    router.push("/");
+  };
 
   return (
     <header className="border-b border-border bg-card">
@@ -53,13 +53,22 @@ export function Header({ currentView }: HeaderProps) {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          <Link href="/routes/new" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-            ルート
+          <Link
+            href="/routes/new"
+            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+          >
+            ルートプランナー
           </Link>
-          <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          <a
+            href="#"
+            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+          >
             探索
           </a>
-          <Link href="/activity" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
+          <Link
+            href="/activity"
+            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
+          >
             アクティビティ
           </Link>
         </nav>
@@ -74,9 +83,15 @@ export function Header({ currentView }: HeaderProps) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => router.push("/dashboard")}>ダッシュボード</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/activity")}>アクティビティ</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/routes")}>マイルート</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+                  ダッシュボード
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/activity")}>
+                  アクティビティ
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/routes")}>
+                  マイルート
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -127,11 +142,14 @@ export function Header({ currentView }: HeaderProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button className="hidden md:inline-flex" onClick={() => router.push("/routes/new")}>
+          <Button
+            className="hidden md:inline-flex"
+            onClick={() => router.push("/routes/new")}
+          >
             新規ルート作成
           </Button>
         </div>
       </div>
     </header>
-  )
+  );
 }

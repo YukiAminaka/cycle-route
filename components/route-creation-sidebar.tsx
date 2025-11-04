@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Upload,
@@ -10,9 +9,12 @@ import {
   ChevronRight,
   MoreVertical,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { CueSheet } from "./cue-sheet";
+import { Cue } from "@/types/route";
 
 type RouteCreationSidebarProps = {
+  cue: Cue[];
   routeName: string;
   onSave: () => void;
   onImport: () => void;
@@ -21,28 +23,14 @@ type RouteCreationSidebarProps = {
 };
 
 export function RouteCreationSidebar({
+  cue,
   routeName,
   onSave,
   onImport,
   isCollapsed,
   onCollapsedChange,
 }: RouteCreationSidebarProps) {
-  const [locationInput, setLocationInput] = useState("");
-  const [routingMode, setRoutingMode] = useState<
-    "bike" | "walk" | "car" | "direct"
-  >("bike");
-  const [roadSurface, setRoadSurface] = useState("paved");
-  const [routeColor, setRouteColor] = useState("#ef4444");
-
-  const colors = [
-    "#ef4444", // red
-    "#eab308", // yellow
-    "#22c55e", // green
-    "#3b82f6", // blue
-    "#ec4899", // pink
-    "#7c2d12", // brown
-    "#000000", // black
-  ];
+  const [cues, setCues] = useState<Cue[]>(cue || []);
 
   if (isCollapsed) {
     return (
@@ -148,15 +136,7 @@ export function RouteCreationSidebar({
           {/* Cue Sheet */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold">キューシート</h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-start gap-2">
-                <div className="w-4 h-4 bg-green-500 rounded-full mt-0.5 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium">ルート出発点</div>
-                  <div className="text-muted-foreground text-xs">0.0 km</div>
-                </div>
-              </div>
-            </div>
+            <CueSheet cues={cue} />
             <Button
               variant="outline"
               size="sm"
