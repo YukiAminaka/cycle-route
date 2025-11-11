@@ -148,7 +148,7 @@ export function CueSheet({
     totalDuration ?? cues.reduce((sum, cue) => sum + cue.duration_s, 0);
 
   return (
-    <div className="rounded-lg border bg-card shadow-sm">
+    <div className="rounded-lg border bg-card shadow-sm max-w-70">
       {/* Header */}
       <div className="p-4 border-b">
         <div className="flex items-center justify-between">
@@ -181,7 +181,7 @@ export function CueSheet({
                     {getManeuverText(cues[0].maneuver)}
                   </div>
                   {cues[0].road && (
-                    <div className="text-xs text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground">
                       {cues[0].road}
                     </div>
                   )}
@@ -232,7 +232,7 @@ export function CueSheet({
                               {getManeuverText(cue.maneuver)}
                             </div>
                             {cue.road && (
-                              <div className="text-xs text-muted-foreground truncate">
+                              <div className="text-xs text-muted-foreground">
                                 {cue.road}
                               </div>
                             )}
@@ -266,7 +266,7 @@ export function CueSheet({
                     {getManeuverText(cues[cues.length - 1].maneuver)}
                   </div>
                   {cues[cues.length - 1].road && (
-                    <div className="text-xs text-muted-foreground truncate">
+                    <div className="text-xs text-muted-foreground">
                       {cues[cues.length - 1].road}
                     </div>
                   )}

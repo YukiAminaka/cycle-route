@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useRef, useState, useCallback, useMemo } from "react";
+import React, {
+  useRef,
+  useState,
+  useCallback,
+  useMemo,
+  use,
+  useEffect,
+} from "react";
 import { useMap } from "react-map-gl/maplibre";
 import Map, { MapRef as MapLibreMapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -96,7 +103,7 @@ const Waypoints = () => {
   // Render map style URL
   const mapStyle = useMemo(
     () =>
-      `https://api.maptiler.com/maps/streets-v2/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`,
+      `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`,
     []
   );
 
