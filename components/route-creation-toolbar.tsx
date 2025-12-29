@@ -81,16 +81,14 @@ export function RouteCreationToolbar({
 
   if (isCollapsed) {
     return (
-      <div className="shrink-0 flex items-start">
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-10 w-10 bg-background shadow-lg m-4"
-          onClick={() => onCollapsedChange(false)}
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-      </div>
+      <Button
+        variant="outline"
+        size="icon"
+        className="absolute top-4 right-4 h-10 w-10 bg-white shadow-lg z-10"
+        onClick={() => onCollapsedChange(false)}
+      >
+        <ChevronLeft className="h-5 w-5" />
+      </Button>
     );
   }
 

@@ -32,16 +32,14 @@ export function RouteCreationSidebar({
 }: RouteCreationSidebarProps) {
   if (isCollapsed) {
     return (
-      <div className="shrink-0 flex items-start">
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => onCollapsedChange(false)}
-          className="bg-background shadow-lg m-4"
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => onCollapsedChange(false)}
+        className="absolute top-4 left-4 bg-white shadow-lg z-10"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </Button>
     );
   }
 
