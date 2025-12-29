@@ -26,7 +26,7 @@ const INITIAL_VIEW = {
   zoom: 14,
 };
 
-const Waypoints = () => {
+export const RoutePlanner = () => {
   const { map } = useMap();
   const nativeMap = map?.getMap();
   const mapRef = useRef<MapLibreMapRef>(null);
@@ -39,18 +39,18 @@ const Waypoints = () => {
 
   // Mapbox search integration
   const {
-    query,
-    setQuery,
-    suggestions,
-    isLoading: isSearchLoading,
-    error: searchError,
-    pickSuggestion,
-    clearSuggestions,
+    query, // 検索クエリ
+    setQuery, // 検索クエリを更新する関数
+    suggestions, // 検索候補のリスト
+    isLoading: isSearchLoading, // 検索中かどうかのフラグ
+    error: searchError, // 検索エラー情報
+    pickSuggestion, // 検索候補を選択する関数
+    clearSuggestions, // 検索候補をクリアする関数
   } = useMapboxSearch({
-    proximity: TOKYO_STATION,
+    proximity: TOKYO_STATION, // 東京駅を中心に検索
     country: "JP",
     language: "ja",
-    debounceMs: 160,
+    debounceMs: 160, // デバウンス時間
   });
 
   // Directions management
@@ -161,5 +161,3 @@ const Waypoints = () => {
     </ErrorBoundary>
   );
 };
-
-export { Waypoints };
