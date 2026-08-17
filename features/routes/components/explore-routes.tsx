@@ -4,7 +4,6 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useRouter } from "next/navigation";
 import { useActionState, useEffect, useMemo, useRef } from "react";
 import Map, { MapProvider } from "react-map-gl/maplibre";
 import { exploreRoutes, ExploreRoutesState } from "../actions/explore-routes";
@@ -17,11 +16,11 @@ export default function RouteExplore() {
     latitude: 35.6844,
     zoom: 14,
   };
-  const router = useRouter();
+
   const mapStyle = useMemo(
     () =>
       `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`,
-    []
+    [],
   );
 
   const [state, formAction] = useActionState<
