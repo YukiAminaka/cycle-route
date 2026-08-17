@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Route } from "@/types/route";
+import type { Route } from "@/types/mapbox";
 import { Calendar, Clock, MapPin, TrendingUp } from "lucide-react";
 
 interface ActivityProps {

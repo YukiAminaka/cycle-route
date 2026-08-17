@@ -3,7 +3,7 @@ import { useRoutingProfileStore } from "@/features/routes/hooks";
 import type { RouteState } from "@/features/routes/stores/routeStateStore";
 import CustomMapLibreGlDirections from "@/lib/custom-directions";
 import type { CoursePointRequest } from "@/types/api";
-import type { Coordinate, Route } from "@/types/route";
+import type { Coordinate, Route } from "@/types/mapbox";
 import type {
   Feature,
   LineString,

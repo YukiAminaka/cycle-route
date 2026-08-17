@@ -4,11 +4,12 @@ const config: OryClientConfiguration = {
   sdk: {
     url: process.env.NEXT_PUBLIC_ORY_SDK_URL,
   },
+  intl: {
+    locale: "en",
+  },
   project: {
-    default_locale: "en",
     default_redirect_url: "/dashboard",
     error_ui_url: "/error",
-    locale_behavior: "force_default",
     name: "CycleRoute",
     registration_enabled: true,
     verification_enabled: true,

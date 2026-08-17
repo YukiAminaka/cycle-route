@@ -1,6 +1,6 @@
 "use client";
 
-import { RoutePlanner } from "@/components/routePlanner";
+import { RoutePlanner } from "./routePlanner";
 import { RouteResponseModel } from "@/types/api";
 import { MapProvider } from "react-map-gl/maplibre";
 

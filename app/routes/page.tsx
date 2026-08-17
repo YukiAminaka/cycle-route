@@ -1,4 +1,4 @@
-import { MyRoutes } from "@/components/my-routes";
+import { MyRoutes } from "@/features/routes/components/my-routes";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 

@@ -1,9 +1,4 @@
-import {
-  MapboxFeature,
-  MapboxRetrieveResult,
-  MapboxSuggestOptions,
-  Suggestion,
-} from "@/types/route";
+import { GeocodingResult, MapboxFeature } from "@/types/mapbox";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_KEY;
 
@@ -24,7 +19,7 @@ export function getMapboxStaticImageUrl(
     strokeWidth?: number;
     padding?: number;
     style?: string;
-  } = {}
+  } = {},
 ): string {
   const token = validateToken();
 
@@ -48,6 +43,94 @@ export function getMapboxStaticImageUrl(
 }
 
 /**
+ * Mapbox Static Images APIのURLを生成する（ピンマーカー付き）
+ *
+ * @param longitude - 経度
+ * @param latitude - 緯度
+ * @param options - 画像生成オプション
+ * @returns Static Images APIのURL
+ */
+export function getMapboxStaticPinImageUrl(
+  longitude: number,
+  latitude: number,
+  options: {
+    width?: number;
+    height?: number;
+    zoom?: number;
+    pinColor?: string;
+    style?: string;
+  } = {},
+): string {
+  const token = validateToken();
+
+  const {
+    width = 400,
+    height = 225,
+    zoom = 13,
+    pinColor = "F52738",
+    style = "mapbox/streets-v12",
+  } = options;
+
+  const marker = `pin-l+${pinColor}(${longitude},${latitude})`;
+  const center = `${longitude},${latitude},${zoom}`;
+
+  return `https://api.mapbox.com/styles/v1/${style}/static/${marker}/${center}/${width}x${height}?access_token=${token}`;
+}
+
+export type ReverseGeocodeResult = {
+  country_code: string;
+  administrative_area: string;
+  locality: string;
+  postal_code: string;
+};
+
+/**
+ * Reverse geocodes coordinates to address components using Mapbox Geocoding API
+ *
+ * @param longitude - Longitude
+ * @param latitude - Latitude
+ * @returns Address components or null if not found
+ */
+export async function mapboxReverseGeocode(
+  longitude: number,
+  latitude: number,
+): Promise<ReverseGeocodeResult | null> {
+  const token = validateToken();
+
+  const params = new URLSearchParams({
+    longitude: longitude.toString(),
+    latitude: latitude.toString(),
+    access_token: token,
+    language: "ja",
+    // types: "country,region,postcode,place",
+  });
+
+  const response = await fetch(
+    `https://api.mapbox.com/search/geocode/v6/reverse?${params}`,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Mapbox Geocoding API error: ${response.status}`);
+  }
+
+  const data: GeocodingResult = await response.json();
+  console.log(data);
+
+  const features: MapboxFeature[] = data.features;
+
+  if (!features || features.length === 0) return null;
+
+  const ctx = features[0]!.properties?.context ?? {};
+
+  return {
+    country_code: ctx.country?.country_code?.toUpperCase() ?? "",
+    administrative_area: ctx.region?.name ?? "",
+    locality: ctx.place?.name ?? "",
+    postal_code: ctx.postcode?.name ?? "",
+  };
+}
+
+/**
  * Validates that the Mapbox API token is available
  * @throws Error if token is missing
  */
@@ -56,117 +139,4 @@ function validateToken(): string {
     throw new Error("NEXT_PUBLIC_MAPBOX_KEY is not configured");
   }
   return MAPBOX_TOKEN;
-}
-
-/**
- * Fetches location suggestions from Mapbox Search Box API
- *
- * @param query - Search query string
- * @param sessionToken - Unique session identifier for billing
- * @param options - Additional search options
- * @returns Array of location suggestions
- * @throws Error if API request fails
- */
-export async function mapboxSuggest(
-  query: string,
-  sessionToken: string,
-  options: MapboxSuggestOptions = {}
-): Promise<Suggestion[]> {
-  const token = validateToken();
-
-  const params = new URLSearchParams({
-    q: query,
-    session_token: sessionToken,
-    access_token: token,
-    limit: String(options.limit ?? 8),
-    language: options.language ?? "ja",
-    country: options.country ?? "JP",
-    types: options.types ?? "address,street,neighborhood,locality,place,poi",
-  });
-
-  if (options.proximity) {
-    params.set("proximity", `${options.proximity[0]},${options.proximity[1]}`);
-  }
-
-  const response = await fetch(
-    `https://api.mapbox.com/search/searchbox/v1/suggest?${params}`
-  );
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      `Mapbox Suggest API error: ${response.status} ${
-        errorData.message ?? response.statusText
-      }`
-    );
-  }
-
-  const data = await response.json();
-
-  if (!data.suggestions) {
-    console.warn("No suggestions in Mapbox response:", data);
-    return [];
-  }
-
-  return data.suggestions.map(
-    (suggestion: {
-      name: string;
-      place_formatted: string;
-      mapbox_id: string;
-    }) => ({
-      name: suggestion.name,
-      context: suggestion.place_formatted,
-      mapbox_id: suggestion.mapbox_id,
-    })
-  );
-}
-
-/**
- * Retrieves detailed location information from Mapbox
- *
- * @param mapboxId - Unique Mapbox location identifier
- * @param sessionToken - Session identifier (must match the suggest call)
- * @returns Location coordinates and label
- * @throws Error if API request fails
- */
-export async function mapboxRetrieve(
-  mapboxId: string,
-  sessionToken: string
-): Promise<MapboxRetrieveResult | null> {
-  const token = validateToken();
-
-  const params = new URLSearchParams({
-    session_token: sessionToken,
-    access_token: token,
-  });
-
-  const response = await fetch(
-    `https://api.mapbox.com/search/searchbox/v1/retrieve/${encodeURIComponent(
-      mapboxId
-    )}?${params}`
-  );
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(
-      `Mapbox Retrieve API error: ${response.status} ${errorText}`
-    );
-  }
-
-  const data = await response.json();
-  const feature: MapboxFeature = data.features?.[0];
-
-  if (!feature) {
-    console.warn("No feature found in Mapbox retrieve response:", data);
-    return null;
-  }
-
-  const coord =
-    feature.properties?.routable_points?.[0]?.point ??
-    feature.geometry?.coordinates;
-
-  const label =
-    feature.properties?.name ?? feature.properties?.place_formatted ?? "";
-
-  return { coord, label };
 }

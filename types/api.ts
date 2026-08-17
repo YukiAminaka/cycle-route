@@ -24,6 +24,10 @@ export type UserResponseModel = components["schemas"]["user.UserResponseModel"];
 export type LoginUserResponse = components["schemas"]["user.LoginUserResponse"];
 export type LoginUserResponseModel =
   components["schemas"]["user.LoginUserResponseModel"];
+export type UpdateUserProfileRequest =
+  components["schemas"]["user.UpdateUserProfileRequest"];
+export type UpdateUserLocationRequest =
+  components["schemas"]["user.UpdateUserLocationRequest"];
 
 // Common
 export type ErrorResponse = components["schemas"]["response.ErrorResponse"];

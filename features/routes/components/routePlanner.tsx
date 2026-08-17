@@ -14,8 +14,9 @@ import {
   RouteResponseModel,
   WaypointRequest,
 } from "@/types/api";
-import { Coordinate } from "@/types/route";
-import { Button } from "./ui/button";
+import { Coordinate } from "@/types/mapbox";
+import { ErrorBoundary } from "@/components/error-boundary";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -23,8 +24,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "./ui/dialog";
-import { ErrorBoundary } from "./error-boundary";
+} from "@/components/ui/dialog";
 import { RouteCreationSidebar } from "./route-creation-sidebar";
 import { RouteCreationToolbar } from "./route-creation-toolbar";
 
@@ -38,9 +38,13 @@ const INITIAL_VIEW = {
 // ルート編集時はpropsでrouteを受け取る
 type RoutePlannerProps = {
   editRoute?: RouteResponseModel;
+  initialLocation?: { longitude: number; latitude: number } | null;
 };
 
-export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
+export const RoutePlanner = ({
+  editRoute,
+  initialLocation,
+}: RoutePlannerProps) => {
   const { map } = useMap();
   const nativeMap = map?.getMap();
   const mapRef = useRef<MapLibreMapRef>(null);
@@ -71,6 +75,15 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
   const canUndo = past.length > 0;
   const canRedo = future.length > 0;
 
+  const proximity = useMemo<Coordinate>(
+    () =>
+      initialLocation
+        ? [initialLocation.longitude, initialLocation.latitude]
+        : TOKYO_STATION,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   // Mapbox search integration
   const {
     query, // 検索クエリ
@@ -81,7 +94,7 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
     pickSuggestion, // 検索候補を選択する関数
     clearSuggestions, // 検索候補をクリアする関数
   } = useMapboxSearch({
-    proximity: TOKYO_STATION, // 東京駅を中心に検索
+    proximity,
     country: "JP",
     language: "ja",
     debounceMs: 160, // デバウンス時間
@@ -92,7 +105,7 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
     (newState: RouteState) => {
       pushState(newState);
     },
-    [pushState]
+    [pushState],
   );
 
   // Directions management
@@ -131,7 +144,6 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
       routeId: editRoute.id ?? "",
       routeName: editRoute.name ?? "",
     });
-
   }, [isReady, editRoute, initializeState, restoreState, setEditMeta]);
 
   // 新規作成モードで、以前編集中だった場合はダイアログを表示
@@ -192,7 +204,7 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
       waypoints.map((coord) => ({
         location: JSON.stringify({ type: "Point", coordinates: coord }),
       })),
-    [waypoints]
+    [waypoints],
   );
 
   // Event handlers
@@ -207,7 +219,7 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
         addWaypoint(result.coord);
       }
     },
-    [pickSuggestion, addWaypoint]
+    [pickSuggestion, addWaypoint],
   );
 
   const handleClear = useCallback(() => {
@@ -228,7 +240,7 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
   const mapStyle = useMemo(
     () =>
       `https://api.maptiler.com/maps/outdoor-v2/style.json?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`,
-    []
+    [],
   );
 
   return (
@@ -248,7 +260,9 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
         <Map
           ref={mapRef}
           id="map"
-          initialViewState={INITIAL_VIEW}
+          initialViewState={
+            initialLocation ? { ...initialLocation, zoom: 14 } : INITIAL_VIEW
+          }
           style={{ width: "100%", height: "100%" }}
           mapStyle={mapStyle}
         />
@@ -284,7 +298,12 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
         )}
 
         {/* 編集継続確認ダイアログ */}
-        <Dialog open={showEditContinueDialog} onOpenChange={(open) => { if (!open) clearEditMeta(); }}>
+        <Dialog
+          open={showEditContinueDialog}
+          onOpenChange={(open) => {
+            if (!open) clearEditMeta();
+          }}
+        >
           <DialogContent showCloseButton={false}>
             <DialogHeader>
               <DialogTitle>編集中のルートがあります</DialogTitle>
@@ -297,9 +316,7 @@ export const RoutePlanner = ({ editRoute }: RoutePlannerProps) => {
               <Button variant="outline" onClick={handleStartNew}>
                 新規作成
               </Button>
-              <Button onClick={handleContinueEditing}>
-                編集を継続
-              </Button>
+              <Button onClick={handleContinueEditing}>編集を継続</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

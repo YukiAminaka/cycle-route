@@ -116,7 +116,7 @@ export function HeaderClient({
                 <DropdownMenuTrigger asChild>
                   <button className="rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
                     <Avatar className="cursor-pointer">
-                      <AvatarImage src="/images/design-mode/shadcn.png" />
+                      <AvatarImage />
                       <AvatarFallback>
                         <User className="h-5 w-5" />
                       </AvatarFallback>
@@ -137,7 +137,9 @@ export function HeaderClient({
                     メッセージ
                   </DropdownMenuItem> */}
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push("/settings")}>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/settings/profile")}
+                  >
                     <Settings className="mr-2 h-4 w-4" />
                     設定
                   </DropdownMenuItem>

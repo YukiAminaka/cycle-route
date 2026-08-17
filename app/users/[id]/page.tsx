@@ -1,4 +1,4 @@
-import { MyRoutes } from "@/components/my-routes";
+import { MyRoutes } from "@/features/routes/components/my-routes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

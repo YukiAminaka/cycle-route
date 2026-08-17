@@ -3,7 +3,7 @@ FROM node:24-slim AS base
 # Stage 1: Install dependencies
 FROM base AS deps
 WORKDIR /app
-RUN corepack enable pnpm
+RUN corepack enable && corepack prepare pnpm@10 --activate
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY package.json ./
@@ -24,7 +24,7 @@ ENV NEXT_PUBLIC_MAPBOX_KEY=$NEXT_PUBLIC_MAPBOX_KEY
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_ORY_SDK_URL=$NEXT_PUBLIC_ORY_SDK_URL
 
-RUN corepack enable pnpm && pnpm run build
+RUN corepack enable && corepack prepare pnpm@10 --activate && pnpm run build
 
 # Stage 3: Production server
 FROM gcr.io/distroless/nodejs24-debian13:nonroot AS runner

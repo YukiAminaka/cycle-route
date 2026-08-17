@@ -4,7 +4,7 @@ export type Coordinate = [number, number];
 // ジオメトリ情報
 export interface Geometry {
   coordinates: Coordinate[];
-  type: "LineString";
+  type: "LineString" | "Point";
 }
 
 // 交差点の詳細情報
@@ -97,14 +97,31 @@ export interface Suggestion {
   context: string;
   mapbox_id: string;
 }
+export interface Context {
+  country?: {
+    country_code?: string;
+    name?: string;
+  };
+  region?: {
+    name?: string;
+  };
+  postcode?: {
+    name?: string;
+  };
+  place?: {
+    name?: string;
+  };
+}
 
 export interface MapboxFeature {
   properties?: {
     name?: string;
+    feature_type?: string;
     place_formatted?: string;
     routable_points?: Array<{
       point?: Coordinate;
     }>;
+    context?: Context;
   };
   geometry?: {
     coordinates?: Coordinate;
@@ -116,10 +133,8 @@ export interface MapboxRetrieveResult {
   label: string;
 }
 
-export interface MapboxSuggestOptions {
-  proximity?: Coordinate;
-  country?: string;
-  language?: string;
-  limit?: number;
-  types?: string;
+export interface GeocodingResult {
+  type: string;
+  features: MapboxFeature[];
+  attribution: string;
 }
