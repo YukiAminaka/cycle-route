@@ -90,7 +90,7 @@ export function LocationEditDialog({
         setError(result.error);
       }
     });
-  }, [location, onOpenChange]);
+  }, [location, onOpenChange, router]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

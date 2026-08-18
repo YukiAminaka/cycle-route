@@ -142,11 +142,11 @@ export function CreateRouteDialog({
               <RadioGroup
                 name={fields.visibility.name}
                 key={fields.visibility.key}
-                defaultValue="0"
+                defaultValue="1"
                 aria-invalid={!!fields.visibility.errors}
               >
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="0" id="public" />
+                  <RadioGroupItem value="1" id="public" />
                   <Label
                     htmlFor="public"
                     className="font-normal cursor-pointer"
@@ -155,7 +155,7 @@ export function CreateRouteDialog({
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="1" id="private" />
+                  <RadioGroupItem value="0" id="private" />
                   <Label
                     htmlFor="private"
                     className="font-normal cursor-pointer"

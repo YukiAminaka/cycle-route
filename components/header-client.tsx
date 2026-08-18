@@ -71,12 +71,12 @@ export function HeaderClient({
               >
                 ルートプランナー
               </Link>
-              <a
-                href="#"
+              <Link
+                href="/explore"
                 className="text-sm font-medium text-foreground hover:text-primary transition-colors"
               >
                 探索
-              </a>
+              </Link>
               <Link
                 href="/activity"
                 className="text-sm font-medium text-foreground hover:text-primary transition-colors"

@@ -90,7 +90,40 @@ export const searchRouteSchema = z.object({
     .min(0, "標高は0以上で入力してください")
     .optional(),
   author: authorFilter.default("all"),
-  visibility: z.coerce.number().int().min(0).max(2).default(0),
+  visibility: z.coerce.number().int().min(0).max(2).optional(),
 });
 
 export type SearchRouteSchema = z.infer<typeof searchRouteSchema>;
+
+export const exploreRoutesSchema = z.object({
+  q: z
+    .string()
+    .max(100, "キーワードは100文字以内で入力してください")
+    .optional(),
+  lat: z.coerce
+    .number()
+    .min(-90, "緯度は-90以上で入力してください")
+    .max(90, "緯度は90以下で入力してください")
+    .optional(),
+  lng: z.coerce
+    .number()
+    .min(-180, "経度は-180以上で入力してください")
+    .max(180, "経度は180以下で入力してください")
+    .optional(),
+  r: z.coerce.number().min(0, "検索半径は0以上で入力してください").optional(),
+  min_distance: z.coerce
+    .number()
+    .min(0, "距離は0以上で入力してください")
+    .optional(),
+  max_distance: z.coerce
+    .number()
+    .min(0, "距離は0以上で入力してください")
+    .optional(),
+  offset: z.coerce
+    .number()
+    .int()
+    .min(0, "オフセットは0以上で入力してください")
+    .optional(),
+});
+
+export type ExploreRoutesSchema = z.infer<typeof exploreRoutesSchema>;
