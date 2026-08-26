@@ -38,6 +38,8 @@ runs:
         tags: |
           ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ inputs.artifact_repo }}/${{ inputs.image_name }}:${{ github.sha }}
         build-args: ${{ inputs.build_args }}
+        cache-from: type=gha,scope=${{ inputs.image_name }}
+        cache-to: type=gha,mode=max,scope=${{ inputs.image_name }}
 
     # Artifact Registryにあるイメージのタグのリストを取得する
     - name: Get Image Tags
